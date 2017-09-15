@@ -4,29 +4,27 @@
             chart: {
                 renderTo: "{{ $model->id }}",
                 @include('charts::_partials.dimension.js2')
+                zoomType: 'x'
             },
-            @if($model->title)
-                title: {
-                    text:  "{!! $model->title !!}",
-                    x: -20 //center
-                },
-            @endif
+            title: {
+                text:''
+            },
+            tooltip: {
+                formatter: function() {
+                    var tooltip = Highcharts.dateFormat('%d.%m.%Y - %H:%M:%S', this.x) + ' : ' + Highcharts.numberFormat((this.y),2,'.') + ' ℃';
+                    return tooltip;
+                }
+            },
             @if(!$model->credits)
                 credits: {
                     enabled: false
                 },
             @endif
             xAxis: {
-                title: {
-                    text: "{{ $model->x_axis_title }}"
-                },
-                categories: [
-                    @foreach($model->labels as $label)
-                        "{!! $label !!}",
-                    @endforeach
-                ],
+                type: 'datetime'
             },
             yAxis: {
+                tickInterval: 1,
                 title: {
                     text: "{!! $model->y_axis_title === null ? $model->element_label : $model->y_axis_title !!}"
                 },
